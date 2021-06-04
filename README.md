@@ -14,3 +14,7 @@ patch -p0 < zeek.patch
 TODO
 
 ## Run the zeek stego
+
+/usr/local/zeek/bin/zeek -C -i <interface> stego.zeek 
+  
+Look for data in the stego-counters.log file.
