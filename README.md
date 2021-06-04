@@ -4,7 +4,7 @@ Zeek extensions to detect covert channels in IPv6 header
 ## Patch zeek source code
 
 Clone the git repository.
-See instuctions: ...
+See <A href="https://docs.zeek.org/en/master/install.html">instuctions</A>.
 
 Enter the zeek folder and patch the code:
 cd <zeek dir>/
@@ -12,7 +12,7 @@ patch -p0 < zeek.patch
 
 (Patch build from zeek commit 3dac5ed80.)
 
-Configure, compile and install zeek as explained in the documentation: ...
+Configure, compile and install zeek as explained in the <A href="https://docs.zeek.org/en/master/install.html">documentation</A>.
 
 ## Install the plugins with utils
 
