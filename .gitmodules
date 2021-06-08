@@ -1,0 +1,3 @@
+[submodule "chelpers-plugin"]
+	path = chelpers-plugin
+	url = https://github.com/mattereppe/chelpers-plugin.git
