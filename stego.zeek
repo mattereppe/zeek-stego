@@ -13,7 +13,7 @@ export {
 # Configuration goes here!!!    #
 #################################
 # Possible values: "fl=Flow Label; tc=Traffic Class; hl=Hop Limit"
-global field="fl";
+global field="tc";
 # Number of bins to use (namely, the number of bins will be 2^N)
 global N = 8;
 # Interval for printing the results (in seconds)
@@ -40,7 +40,7 @@ event dump_counters()
 		return;
 	}
 
-	print field_counters;
+#	print field_counters;
 	local dump: string;
 	dump = cat(field_counters);
 	Log::write(ipv6stego::LOG, [$ts=current_time(), $values=dump]);
@@ -84,9 +84,25 @@ event zeek_init()
 event ip_packet(fl: count, tos: count, hl: count) {
 	# Uncomment this line to debug
 	# print "fl: ", fl, "tos: ", tos, "hl: ", hl;
+	local f: count;
+
+	switch field {
+		case "fl":
+			f=fl;
+			break;
+		case "tc":
+			f=tos;
+			break;
+		case "hl":
+			f=hl;
+			break;
+		default:
+			print "Invalid field name -- reporting is disabled!";
+			break;
+	}
 
 	if( FL > N ) {
-		local b = CNR::shift_right(fl, FL-N);
+		local b = CNR::shift_right(f, FL-N);
 		++field_counters[b];
 		print "Current bin: ", b, "Value: ", field_counters[b]; 
 	}
