@@ -101,7 +101,7 @@ event ip_packet(fl: count, tos: count, hl: count) {
 			break;
 	}
 
-	if( FL > N ) {
+	if( FL >= N ) {
 		local b = CNR::shift_right(f, FL-N);
 		++field_counters[b];
 		print "Current bin: ", b, "Value: ", field_counters[b]; 
