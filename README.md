@@ -53,8 +53,23 @@ The following parameters can be changed:
 
 Run the provided script that creates statistics:
 ```Shell
-/usr/local/zeek/bin/zeek -C -i <interface> stego.zeek 
+% /usr/local/zeek/bin/zeek -C -i <interface> stego.zeek 
 ```
 Note that the script could also be installed alongside the zeek installation tree, so it is executed every time zeek is started. 
 
 Look for data in the stego-counters.log file. The name of the file can be changed in the stego.zeek script.
+
+## Docker image
+
+To facilitate the setup of the patched version, a docker image can be build with the scripts in the Docker folder. Enter the folder and run 
+```Shell 
+sudo docker build -t <image name:version> .
+```
+Once the image is built, configuration is possible through the following environmental variables:
+```Shell
+MONITORED_FIELD: allowed values: "fl", "tc", "hl"
+BASEBIN: any value from 0 to field length (20 for Flow Label, 8 for Traffic Class and Hop Limit)
+DUMP_INTERVAL: the interval for dumping data to the log file
+```
+
+The docker image saves data to the stego-counter.log file in the internal /root folder.
