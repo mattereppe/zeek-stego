@@ -73,3 +73,5 @@ DUMP_INTERVAL: the interval for dumping data to the log file
 ```
 
 The docker image saves data to the stego-counter.log file in the internal /root folder.
+
+Note: building the docker image from scratch requires a long time (due to compilation of zeek).
