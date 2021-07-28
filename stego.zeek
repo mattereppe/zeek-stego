@@ -115,16 +115,14 @@ event ip_packet(fl: count, tos: count, hl: count) {
 		case "hl":
 			f=hl;
 			break;
+		case "ack":
+			break;
 		default:
 			print "Invalid field name -- reporting is disabled!";
 			break;
 	}
 
-	update_counters(f);
-#	if( FL >= N ) {
-#		local b = CNR::shift_right(f, FL-N);
-#		++field_counters[b];
-#		#print "Current bin: ", b, "Value: ", field_counters[b]; 
-#	}
+	if( field != "ack" )
+		update_counters(f);
 }
 
