@@ -1,5 +1,5 @@
 # zeek-stego
-Zeek extensions to detect covert channels in the IPv6 header. This work includes a patch to create events for each IP packet that report the value of header fields that could be used to bear covert channels, and a script to analyse them. In addition, a plugin is also provided with a few helper functions to analyse data. Zeek-stego currently reports statistics about Flow Label (IPv6 only), Traffic Class/Type of Service, Hop Limit/Time To Live fields of IPv4/IPv6 packets. The output consists of the number of packets seen for given interval ranges. More in detail, the full range of possible values for a given field is partioned in a given number of intervals, and a counter keeps track of the number of packets which field value falls in each partition. It works the same way as <A href="https://github.com/mattereppe/bccstego">bccstego</A>, which is an alternative implementation of the same concept.
+Zeek extensions to detect covert channels in the IPv6 header. This work includes a patch to create events for each IP packet that report the value of header fields that could be used to bear covert channels, and a script to analyse them. In addition, a plugin is also provided with a few helper functions to analyse data. Zeek-stego currently reports statistics about Flow Label (IPv6 only), Traffic Class/Type of Service, Hop Limit/Time To Live fields of IPv4/IPv6 packets, Ack numbers (TCP). The output consists of the number of packets seen for given interval ranges. More in detail, the full range of possible values for a given field is partioned in a given number of intervals, and a counter keeps track of the number of packets which field value falls in each partition. It works the same way as <A href="https://github.com/mattereppe/bccstego">bccstego</A>, which is an alternative implementation of the same concept.
 
 Zeek-stego is designed as a proof-of-concept for detecting covert channels in network protocol headers, but it is not conceived for running in production environments, because of the overhead in triggering events for each packet. If you are looking for a more efficient way of monitoring network packet headers, have a look at <A href="https://github.com/mattereppe/bccstego">bccstego</A>.
 
@@ -11,7 +11,7 @@ See <A href="https://docs.zeek.org/en/master/install.html">instuctions</A>.
 Enter the zeek folder and patch the code:
 ```Shell
 % cd <zeek dir>/
-% patch -p1 < zeek_patch 
+% patch -p1 < stego.patch 
 ```
 
 (Patch build from zeek commit 3dac5ed80.)
@@ -36,7 +36,7 @@ Configure the stego.zeek file according to the monitored IP header field. There 
 #################################
 # Configuration goes here!!!    #
 #################################
-# Possible values: "fl=Flow Label; tc=Traffic Class; hl=Hop Limit"
+# Possible values: "fl=Flow Label; tc=Traffic Class; hl=Hop Limit; ack=TCP Ack num"
 global field="fl";
 # Number of bins to use (namely, the number of bins will be 2^N)
 global N = 8;

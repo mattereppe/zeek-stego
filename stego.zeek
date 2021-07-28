@@ -1,4 +1,4 @@
-module ipv6stego;
+module ipstego;
 
 export {
 	redef enum Log::ID += { LOG };
@@ -12,8 +12,8 @@ export {
 #################################
 # Configuration goes here!!!    #
 #################################
-# Possible values: "fl=Flow Label; tc=Traffic Class; hl=Hop Limit"
-global field="tc";
+# Possible values: "fl=Flow Label; tc=Traffic Class; hl=Hop Limit; ack=TCP Ack num"
+global field="ack";
 # Number of bins to use (namely, the number of bins will be 2^N)
 global N = 8;
 # Interval for printing the results (in seconds)
@@ -43,7 +43,18 @@ event dump_counters()
 #	print field_counters;
 	local dump: string;
 	dump = cat(field_counters);
-	Log::write(ipv6stego::LOG, [$ts=current_time(), $values=dump]);
+	Log::write(ipstego::LOG, [$ts=current_time(), $values=dump]);
+}
+
+function update_counters(f: count)
+{
+	#print "oh: ", f;
+
+	if( FL >= N ) {
+		local b = CNR::shift_right(f, FL-N);
+		++field_counters[b];
+		print "Current bin: ", b, "Value: ", field_counters[b]; 
+	}
 }
 
 event zeek_init()
@@ -58,6 +69,9 @@ event zeek_init()
 			fallthrough;
 		case "hl":
 			FL=8;
+			break;
+		case "ack":
+			FL=32;
 			break;
 		default:
 			FL=0;
@@ -81,6 +95,11 @@ event zeek_init()
 
 }
 
+
+event tcp_ack(c: connection, ack: count) {
+	update_counters(ack);
+}
+
 event ip_packet(fl: count, tos: count, hl: count) {
 	# Uncomment this line to debug
 	# print "fl: ", fl, "tos: ", tos, "hl: ", hl;
@@ -101,10 +120,11 @@ event ip_packet(fl: count, tos: count, hl: count) {
 			break;
 	}
 
-	if( FL >= N ) {
-		local b = CNR::shift_right(f, FL-N);
-		++field_counters[b];
-		#print "Current bin: ", b, "Value: ", field_counters[b]; 
-	}
+	update_counters(f);
+#	if( FL >= N ) {
+#		local b = CNR::shift_right(f, FL-N);
+#		++field_counters[b];
+#		#print "Current bin: ", b, "Value: ", field_counters[b]; 
+#	}
 }
 

@@ -13,7 +13,7 @@ RUN apt-get update && \
 	git clone --recursive https://github.com/zeek/zeek && \
 	git clone --recursive https://github.com/mattereppe/zeek-stego.git && \
 	cd zeek && \
-	patch -p1 < ../zeek-stego/zeek_patch && \
+	patch -p1 < ../zeek-stego/stego.patch && \
 	./configure && make && make install && \
 	cd ../zeek-stego/chelpers-plugin/ && \
 	./configure --zeek-dist=../../zeek/ && make && make install && \
