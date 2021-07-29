@@ -97,7 +97,8 @@ event zeek_init()
 
 
 event tcp_ack(c: connection, ack: count) {
-	update_counters(ack);
+	if( field=="ack" ) 
+		update_counters(ack);
 }
 
 event ip_packet(fl: count, tos: count, hl: count) {
